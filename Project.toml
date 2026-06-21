@@ -1,0 +1,13 @@
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+BufferedStreams = "e1450e63-4bb3-523b-b2a4-4ffa8c0fd77d"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+LoggingExtras = "e6f89c97-d47a-5376-807f-9c37f3926c36"
+Oxygen = "df9a0d86-3283-4920-82dc-4555fc0d1d8b"
+URIs = "5c2747f8-b7ea-4ff2-ba2e-563bfd36b1d4"
+VegaDatasets = "0ae4a718-28b7-58ec-9efb-cded64d6d5b4"
+VegaLite = "112f6efa-9a02-5b7d-90c0-432ed331239a"
