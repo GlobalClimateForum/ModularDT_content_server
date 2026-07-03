@@ -8,6 +8,7 @@ using Logging, LoggingExtras
 using CSV
 using DataFrames
 using VegaLite, VegaDatasets
+using DotEnv
 
 # maybe make configurable?
 # Read the CONTENT_DIR from the .env file if it exists
