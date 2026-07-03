@@ -10,7 +10,14 @@ using DataFrames
 using VegaLite, VegaDatasets
 
 # maybe make configurable?
-const CONTENT_DIR = abspath("/home/lincke/Repositories/decision-theatre/modularDT/ModularDT_content_server/content/")
+# Read the CONTENT_DIR from the .env file if it exists
+DotEnv.load!()
+if haskey(ENV, "CONTENTDIR")
+    global CONTENT_DIR = abspath(ENV["CONTENTDIR"])
+else
+    global CONTENT_DIR = abspath(joinpath(@__DIR__, "content"))
+    println("$(@__DIR__)")
+end
 
 include("./tools/tools.jl")
 include("./tools/endpoint_tools.jl")
