@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "a8b97bc5245b9baf466aa7f7eb47ab91fd388b0b"
+project_hash = "d60dad4fcea68c715ef7daa918f8fafd0dd67e1f"
 
 [[deps.ArgParse]]
 deps = ["Logging", "TextWrap"]
@@ -122,6 +122,12 @@ version = "1.11.0"
 git-tree-sha1 = "7442a5dfe1ebb773c29cc2962a8980f47221d76c"
 uuid = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 version = "0.9.5"
+
+[[deps.DotEnv]]
+deps = ["PrecompileTools"]
+git-tree-sha1 = "92e88cb68a5b10545234f46dfaeb2fa8a8a50c45"
+uuid = "4dc1fcf4-5e3b-5448-94ab-0c38ec0385c1"
+version = "1.0.0"
 
 [[deps.DoubleFloats]]
 deps = ["GenericLinearAlgebra", "LinearAlgebra", "Printf", "Quadmath", "Random", "SpecialFunctions"]
