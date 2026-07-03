@@ -17,6 +17,7 @@ include("./tools/endpoint_tools.jl")
 include("./themes/theme_ggplot2.jl")
 
 include("./endpoints/endpoint_file.jl")
+include("./endpoints/endpoints_server_health.jl")
 include("./endpoints/user_defined_endpoints/dt_diva/endpoint_diva_line_plot.jl")
 include("parse_arguments.jl")
 include("setup_logging.jl")
