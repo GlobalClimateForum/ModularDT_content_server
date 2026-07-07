@@ -47,14 +47,19 @@ const ALLOWED_ORIGINS = [
 function cors_headers(req::HTTP.Request)
     origin = HTTP.header(req, "Origin", "")
     allowed = origin in ALLOWED_ORIGINS ? origin : ""
+    
+    # Debug logging
+    if isempty(allowed) && !isempty(origin)
+        @warn "CORS origin not allowed" origin allowed_origins=ALLOWED_ORIGINS
+    end
+    
     return [
         "Access-Control-Allow-Origin" => allowed,
         "Access-Control-Allow-Headers" => "*",
         "Access-Control-Allow-Methods" => "GET, POST, PUT, DELETE, OPTIONS",
-        "Vary" => "Origin",   # tells caches the response differs per origin
+        "Vary" => "Origin",
     ]
 end
-
 # Define a middleware function to handle CORS preflight requests and add CORS headers to responses
 function CorsMiddleware(handler)
     return function(req::HTTP.Request)

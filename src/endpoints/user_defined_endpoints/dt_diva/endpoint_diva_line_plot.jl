@@ -1,3 +1,17 @@
+const ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173", 
+    "http://localhost:8000", 
+    "http://127.0.0.1:8000"
+]
+
+function set_cors!(stream::HTTP.Stream)
+    origin = HTTP.header(stream.message, "Origin", "")
+    allowed = origin in ALLOWED_ORIGINS ? origin : ""
+    HTTP.setheader(stream, "Access-Control-Allow-Origin" => allowed)
+    HTTP.setheader(stream, "Vary" => "Origin")
+end
+
 # route for a time series plot with progress report
 @stream "/diva_line_plot" function (stream::HTTP.Stream)
 
@@ -19,6 +33,8 @@
     # 3. check: does the full absolute path start with the CONTENT_DIR?
     if !startswith(full_path, CONTENT_DIR)
         HTTP.setstatus(stream, 403)
+        set_cors!(stream)
+        HTTP.startwrite(stream)  
         write(stream, "Access denied: Invalid path")
         return
     end
@@ -26,6 +42,8 @@
     # 4. check if file exists
     if !isfile(full_path)
         HTTP.setstatus(stream, 404)
+        set_cors!(stream)
+        HTTP.startwrite(stream)
         write(stream, "File not found")
         return
     end
@@ -33,7 +51,8 @@
     # Write header in stream
     HTTP.setheader(stream, "Content-Type" => "text/event-stream")
     HTTP.setheader(stream, "Cache-Control" => "no-cache")
-    HTTP.setheader(stream, "Connection" => "keep-alive")
+    # HTTP.setheader(stream, "Connection" => "keep-alive")
+    set_cors!(stream) 
     HTTP.startwrite(stream)
 
     df = DataFrame()
@@ -47,6 +66,8 @@
     catch e
         println(e)
         HTTP.setstatus(stream, 452)
+        set_cors!(stream)
+        HTTP.startwrite(stream)
         write(stream, "File " * requested_data_file * " exists, but no valid csv format detected")
         return
     end
@@ -69,10 +90,10 @@
         p = df |> @vlplot(:line, x=(params["x"]), y=(params["y"]),config=theme_ggplot2)
         
 	# and convert into json. Need to used the json-parser from VegaLite, otherwise the result might not be correct
-	json_string = VegaLite.json(p)
-        write(stream, "plot: $json_string\n\n")
+	json_string = VegaLite.json(p) |> x -> replace(x, "\n" => "") |> x -> replace(x, " " => "")
+        write(stream, "data: $json_string\n\n")
+        flush(stream)
     catch e
-        @error "Streaming error @e"
-        # Not possible to set a 500 here - the header was already written.
+        @error "Streaming error" exception=(e, catch_backtrace())
     end
 end
