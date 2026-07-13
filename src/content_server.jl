@@ -65,11 +65,13 @@ function CorsMiddleware(handler)
     return function(req::HTTP.Request)
         cors_header = cors_headers(req)
         if HTTP.method(req) == "OPTIONS"
-            return HTTP.Response(200, cors_header)   # answer preflight directly
+            return HTTP.Response(200, cors_header)
         end
-        response = handler(req) # Get the response from the original handler
-        append!(response.headers, cors_header) # Add CORS headers to the response
-        return response # Return the modified response
+        response = handler(req)
+        for (k, v) in cors_header
+            HTTP.setheader(response, k => v) 
+        end
+        return response
     end
 end
 

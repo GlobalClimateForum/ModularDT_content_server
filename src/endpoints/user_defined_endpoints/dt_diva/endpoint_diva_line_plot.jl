@@ -47,12 +47,12 @@ end
         write(stream, "File not found")
         return
     end
-
+    
+    set_cors!(stream) 
     # Write header in stream
     HTTP.setheader(stream, "Content-Type" => "text/event-stream")
     HTTP.setheader(stream, "Cache-Control" => "no-cache")
     # HTTP.setheader(stream, "Connection" => "keep-alive")
-    set_cors!(stream) 
     HTTP.startwrite(stream)
 
     df = DataFrame()
@@ -90,9 +90,10 @@ end
         p = df |> @vlplot(:line, x=(params["x"]), y=(params["y"]),config=theme_ggplot2)
         
 	# and convert into json. Need to used the json-parser from VegaLite, otherwise the result might not be correct
-	json_string = VegaLite.json(p) |> x -> replace(x, "\n" => "") |> x -> replace(x, " " => "")
-        write(stream, "data: $json_string\n\n")
-        flush(stream)
+	json_string = VegaLite.json(p) |> x -> replace(x, "\n" => "")
+    write(stream, "data: $json_string\n\n")
+    flush(stream)
+    HTTP.closewrite(stream)
     catch e
         @error "Streaming error" exception=(e, catch_backtrace())
     end
